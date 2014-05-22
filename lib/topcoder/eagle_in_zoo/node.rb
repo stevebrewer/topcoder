@@ -36,7 +36,23 @@ module EagleInZoo
     # in them
     def possible_future_states_given states
       return [Set.new([self.id])] if states.empty?
-      
+      new_states = []
+      states.each do |state|
+        if state.include?(self.id)
+          if children.empty?
+            # end of the branch - eagle flies away
+            new_states << state.clone
+          else
+            children.each do |child|
+              child.possible_future_states_given([state]).each{|new_state| new_states << new_state}
+            end
+          end
+        else
+          # this node isn't occupied, bird lands here, that's it
+          new_states << state.clone.add(self.id)
+        end
+      end
+      new_states
     end
   end
 end
