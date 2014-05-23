@@ -33,18 +33,23 @@ module EagleInZoo
 
     # states is a list of sets, each set represents a possible
     # state, where the numbers in the set are the nodes with eagle sitting
-    # in them
+    # in them.
+    # return the new states, and the number of times the bird flew away
     def possible_future_states_given states
-      return [Set.new([self.id])] if states.empty?
+      return [Set.new([self.id])], 1.0 if states.empty?
       new_states = []
+      fly_away = 0
       states.each do |state|
         if state.include?(self.id)
           if children.empty?
             # end of the branch - eagle flies away
             new_states << state.clone
+            fly_away = fly_away + 1
           else
             children.each do |child|
-              child.possible_future_states_given([state]).each{|new_state| new_states << new_state}
+              child_states, child_fly_aways = child.possible_future_states_given([state])
+              child_states.each{|new_state| new_states << new_state}
+              fly_away = fly_away + child_fly_aways
             end
           end
         else
@@ -52,7 +57,7 @@ module EagleInZoo
           new_states << state.clone.add(self.id)
         end
       end
-      new_states
+      return new_states, fly_away
     end
   end
 end
