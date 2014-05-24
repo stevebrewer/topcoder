@@ -44,5 +44,8 @@ class BuildTreeTest < Topcoder::TestCase
     assert new_states.include?(Set.new([0, 3, 1, 4])), "Should include [0, 3, 1, 4]"
     assert new_states.include?(Set.new([0, 3, 4])), "Should include [0, 3, 4]"
     assert new_states.include?(Set.new([0, 3, 4, 1])), "Should include [0, 3, 4, 1]"
+
+    assert_equal new_states.uniq.size, 4, "Only 4 uniq states"
+
   end
 end
